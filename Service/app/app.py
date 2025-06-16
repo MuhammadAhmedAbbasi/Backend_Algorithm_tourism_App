@@ -27,8 +27,6 @@ router = APIRouter(
 )
 @router.post("/chatbot", response_model = ChatbotResponse)
 async def non_login(parameters: ChatbotRequest):
-    
-
     place = parameters.place
     info  = parameters.info
     chatbot_answer = non_login_chatbot(place, info)

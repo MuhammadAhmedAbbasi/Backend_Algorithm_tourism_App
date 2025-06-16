@@ -1,70 +1,47 @@
-from transformers import BarkModel
-from transformers import AutoProcessor
-import numpy as np
-import torch
+import pyttsx3
 import os
+import base64
 
-class TextToAudio():
+
+class TTS():
     def __init__(self):
-        self.load_all_models()
-        # self.voice_preset = r"D:\Backend_Algorithm_travel_assistance\downloaded_models\zh_speaker_7.npz"
-    
-    def load_all_models(self):
-        self.base_dir = os.path.dirname(os.path.abspath(__file__))
-        self.downloaded_models = os.path.abspath(os.path.join(self.base_dir, '..', '..', 'downloaded_models'))
-        self.voice_preset = os.path.join(self.downloaded_models, 'zh_speaker_7.npz')
-        self.model_path = os.path.join(self.downloaded_models, 'barksmall')
-        # model_path = r'D:\Backend_Algorithm_travel_assistance\downloaded_models\barksmall'
-        self.model = BarkModel.from_pretrained(self.model_path).to("cuda")
-        self.processor = AutoProcessor.from_pretrained(self.model_path, padding=True, truncation=True)
-    
-    def generate(self, text):
-        chunks = self.split_text(text)
-        audio_segments = []
+        self.engine = pyttsx3.init()
 
-        for chunk in chunks:
-            inputs = self.processor(chunk, voice_preset=self.voice_preset).to("cuda")
-            inputs = {k: v.to("cuda") for k, v in inputs.items()}
-            output = self.model.generate(**inputs)
-            audio_array = output.cpu().numpy().squeeze()
-            audio_segments.append(audio_array)
-        
-        final_audio = np.concatenate(audio_segments)
-        return final_audio
-
-    def split_text(self, text, max_len=30):
-        """Splits the text into chunks based on a character limit, prioritizing sentence completion at full stops or commas."""
-        if len(text) <= max_len:
-            return [text]
-        
-        chunks = []
-        start = 0
-        text_length = len(text)
-        
-        while start < text_length:
-            end = start + max_len
-            window_end = min(end, text_length)
-            
-            # Find the last full stop in the current window
-            last_full_stop = text.rfind('。', start, window_end)
-            if last_full_stop != -1:
-                # Include the full stop by setting end to last_full_stop + 1
-                end = last_full_stop + 1
+    def text_to_speech_and_show_bytes(self, text: str, filename: str="output.mp3", mode: str = 'ZH'):
+        """Convert text to speech, save it, then read and display the bytes"""
+        try:
+            if mode == 'ZH':
+                input_voice, input_language = 'Chinese', 'ZH'
             else:
-                # No full stop found, look for the last comma
-                last_comma = text.rfind('，', start, window_end)
-                if last_comma != -1:
-                    # Include the comma by setting end to last_comma + 1
-                    end = last_comma + 1
-                else:
-                    # No punctuation found, split at max_len or remaining text
-                    end = window_end
+                input_voice, input_language = 'English', 'EN'
+
             
-            # Ensure we don't exceed the text length
-            end = min(end, text_length)
-            chunk = text[start:end].strip()
-            if chunk:  # Avoid adding empty chunks
-                chunks.append(chunk)
-            start = end  # Move to the next part
-        
-        return chunks
+            # Initialize the engine
+            self.engine = pyttsx3.init()
+            
+            # Try to set Chinese voice if available
+            voices = self.engine.getProperty('voices')
+            for voice in voices:
+                if input_voice in voice.name or input_language in voice.languages:
+                    self.engine.setProperty('voice', voice.id)
+                    break
+            
+            # Save to file
+            self.engine.save_to_file(text, filename)
+            self.engine.runAndWait()
+            
+            # Read the file back as bytes
+
+            with open(filename, 'rb') as f:
+                audio_bytes = f.read()
+            audio_bytes_64 = base64.b64encode(audio_bytes).decode('utf-8')
+
+            return audio_bytes_64
+            
+        except Exception as e:
+            print(f"Error: {e}")
+        finally:
+            # Clean up - remove the file if you want
+            if os.path.exists(filename):
+                os.remove(filename)
+

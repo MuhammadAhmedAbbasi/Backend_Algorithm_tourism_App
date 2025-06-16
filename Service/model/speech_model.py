@@ -1,5 +1,12 @@
 from funasr import AutoModel
 import os
+from Service.config import (
+    MODELS_DIR,
+    MAIN_MODEL,
+    VAD_MODEL,
+    PUNC_MODEL,
+    GEN_PARAMS
+)
 
 class SpeechRecognitionModel:
     def __init__(self):
@@ -7,29 +14,21 @@ class SpeechRecognitionModel:
         self.load_model()
     
     def load_model(self):
-        """Initialize the ASR model with specified configurations using relative paths"""
-        base_dir = os.path.dirname(os.path.abspath(__file__))
-        models_dir = os.path.abspath(os.path.join(base_dir, '..', '..', 'downloaded_models'))
-
+        """Initialize the ASR model with configurations from config"""
         self.model = AutoModel(
-            model=os.path.join(models_dir, 'paraformer-zh'), 
-            model_revision="v2.0.4",
-            vad_model=os.path.join(models_dir, 'fsmn-vad'), 
-            vad_model_revision="v2.0.4",
-            punc_model=os.path.join(models_dir, 'ct-punc'), 
-            punc_model_revision="v2.0.4"
+            model=os.path.join(MODELS_DIR, MAIN_MODEL["name"]),
+            model_revision=MAIN_MODEL["revision"],
+            vad_model=os.path.join(MODELS_DIR, VAD_MODEL["name"]),
+            vad_model_revision=VAD_MODEL["revision"],
+            punc_model=os.path.join(MODELS_DIR, PUNC_MODEL["name"]),
+            punc_model_revision=PUNC_MODEL["revision"]
         )
 
     def transcribe(self, audio_data):
-        """Transcribe audio data to text"""
+        """Transcribe audio data to text using configured parameters"""
         res = self.model.generate(
             input=audio_data,
             cache={},
-            language="zn",
-            use_itn=True,
-            batch_size_s=60,
-            merge_vad=True,
-            merge_length_s=15,
+            **GEN_PARAMS
         )
         return res[0]["text"] if res else ""
-    

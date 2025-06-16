@@ -1,0 +1,3 @@
+[console_scripts]
+tourism-backend = main:main
+

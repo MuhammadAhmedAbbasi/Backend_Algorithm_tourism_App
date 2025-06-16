@@ -5,6 +5,7 @@ class AccommodationRequest(BaseModel):
     selected_route: str
     date_of_stay: str
     accommodation_type: str
+    housing_type: str
     stars: int
     room_rate: int
     total_people: int
@@ -13,4 +14,4 @@ class AccommodationRequest(BaseModel):
     children: int
     children_age: List[int]
     transportation_preference: str
-    daily_itinerary: Dict[str, Any]
+    

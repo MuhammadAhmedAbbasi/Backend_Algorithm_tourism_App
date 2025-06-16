@@ -58,6 +58,12 @@ feature.csv
 downloaded_models/
 test_recording/
 travel/
+Service/phantom
+Service/phantom_wan
+Service/phantom-Wan-Models
+Service/tourism_backend.egg-info
+Service/Wan2.1-T2V-1.3B
+Service/generated_videos
 
 recordings/
 insurance/

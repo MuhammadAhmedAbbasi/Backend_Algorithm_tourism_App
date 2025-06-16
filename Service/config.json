@@ -1,0 +1,118 @@
+{
+    "api": {
+      "base_url": "/algorithm/api",
+      "non_login_prefix": "/non-login"
+    },
+    "image_processing": {
+      "default_contrast": 0.8,
+      "default_brightness": 18,
+      "default_saturation": 1.35,
+      "default_sharpness": 1.5,
+      "jpeg_quality": 90,
+      "error_fallback": "return_original",
+      "base64_encoding": true
+    },
+    "image_enhancement_ranges": {
+      "contrast": [0.5, 2.0],
+      "brightness": [0, 50],
+      "saturation": [0.5, 2.0],
+      "sharpness": [0.5, 3.0]
+    },
+    "caption_service": {
+    "default_model": "llava:13b",
+    "default_prompt": "Describe this image in Chinese language:",
+    "api_base_url": "http://localhost:11434/api/generate",
+    "api_timeout": 500,
+    "allowed_mime_types": ["image/"],
+    "default_stream": false,
+    "error_messages": {
+      "api_failure": "API request failed",
+      "processing_failure": "Processing failed",
+      "no_caption": "No caption generated",
+      "no_file": "No file was uploaded",
+      "invalid_type": "Only image files are allowed",
+      "empty_file": "Uploaded file is empty",
+      "server_error": "Server error: {error}"
+    }
+  },
+  "qwen_description_model": {
+    "model_name": "qwen2.5:3b",
+    "base_url": "http://192.168.1.102:11434",
+    "prompt_template": "您是一位专业的太原旅游导游。请根据用户选择的目的地，撰写一段文字介绍，内容包括该景点的简要历史、可探索的特色、包含的亮点或任何与之相关的著名事物，分为两个自然段落进行描述。\n\n📥 输入参数：\n\n用户选择的目的地：{destination}\n\n📝 任务说明：\n\n根据用户选择的目的地，您需要像专业导游一样提供一段文字介绍。介绍应以自然段落的形式呈现，避免使用项目符号、括号或引号。第一段可简要介绍该景点的历史背景或文化意义，第二段可重点描述游客可以探索的内容、特色体验或著名看点，使游客对该目的地有更深入的了解。"
+  },
+    "qwen_login_model": {
+      "model_name": "qwen2.5:3b",
+      "base_url": "http://192.168.1.102:11434",
+      "prompts": {
+        "travel": "您是一位专业的太原旅行规划助手。请根据用户的旅行时间、兴趣偏好、出行天数以及旅行者的年龄，生成三个完整的个性化太原旅行路线选项。\n\n📥 输入参数：\n 到达日期和时间： {arrival_datetime}\n 离开日期和时间： {departure_datetime}\n 旅行者年龄（列表）： {traveler_ages}\n 历史文化旅游兴趣： {historical_culture_interests}\n 民俗文化旅游兴趣： {folk_culture_interests}\n 名人人文旅游兴趣： {famous_humanistic_interests}\n 红色文化旅游兴趣： {red_culture_interests}\n 美食旅游兴趣： {food_interests}\n 网红文化旅游兴趣： {celebrity_culture_interests}\n 兴趣优先级顺序（例如：1. 美食旅游，2. 历史文化旅游，3. 民俗文化旅游）： {interest_priority_order}\n\n📝 任务说明：\n 请根据用户选择的兴趣类别、兴趣优先级顺序、旅行的天数以及旅行者的年龄段，规划出 三个不同的太原旅行路线。每条路线需覆盖用户所选择的所有旅游类别，并在行程顺序或主题侧重点上进行变化。\n 请合理安排每天的行程内容，使其适合不同年龄层的游客：如老年人或儿童安排轻松舒适的活动，年轻人可适当增加探索性和深度体验的内容。同时，需结合太原景点的地理分布和游览习惯，确保行程流畅合理，注重每日活动节奏的平衡。\n 每条路线请以 自然段落的叙述方式 进行描述，不要使用列表符号、括号或引号。描述需清晰地指出每日的行程，例如：\n“第一天可以从参观山西博物院开始，随后漫步于迎泽公园，享受轻松的一天。第二天可前往晋祠，深入了解太原的历史文化，并在附近品尝当地特色午餐……”\n\n🧾 输出格式：\n🎉 根据您的出行时间、兴趣偏好和旅伴年龄，我们为您定制了三条太原旅行路线，请查阅并选择最适合的一条：\n\n🔹 路线一：\n [自然段文字，描述路线 1]\n\n🔹 路线二：\n [自然段文字，描述路线 2]\n\n🔹 路线三：\n [自然段文字，描述路线 3]",
+        "food": "你是一位专业的太原旅行助手。请根据用户提供的信息，为用户推荐符合要求的当地餐厅。请根据与所选路线的距离、预算以及用户选择的用餐偏好，提供三家餐厅名称。\n\n📥 用户输入参数：\n- 所选旅行路线：{selected_route}\n- 日期: {date}\n- 用餐人数：{number_of_people}\n- 人均用餐预算：{budget} 元 \n- 餐厅与景点之间可接受的距离范围：{distance_range}\n- 用户用餐偏好（仅提供用户请求的餐食，可能包括早餐、午餐、小吃或晚餐）：{meal_preferences}\n\n📝 任务：\n 请根据与所选路线的距离、预算以及用户选择的用餐偏好，提供三家餐厅名称。\n 如果用户选择：\n- 早餐：靠近路线上的第一个景点；\n\n- 午餐：靠近路线中途的景点；\n\n- 小吃：可靠近任何景点；\n\n- 晚餐：靠近路线上的最后一个景点。\n\n 对于用户选择的每种餐食类型，请提供三项符合以下要求的推荐：\n\n- 价格：人均价格不得超过预算；\n\n- 必须包含以下内容：\n\n- 餐厅名称 \n- 菜系（例如：山西特色菜、小吃、川菜、清真、素食等）；\n- 人均价格（必须符合预算）；\n- 简洁的推荐理由（1~2 句话，突出环境或菜品特色）；\n- 导航建议（例如：“距离 XXX 步行约 5 分钟” 或 “乘坐出租车约 10 分钟”）。\n\n📌 输出格式：\n 请严格遵循以下格式，仅输出用户选择的餐食。例如，如果用户选择了早餐和晚餐，则输出应为：\n\n 早餐：\n 选项 1：\nXXXX\n\n 选项 2：\nXXXX\n\n 选项 3：\nXXXX\n\n 晚餐：\n 选项 1：\nXXXX\n\n 选项 2：\nXXXX\n\n 选项 3：\nXXXX",
+        "accommodation": "你是一位专业的太原市旅行助理。请根据用户选择的旅行路线和住宿需求，推荐两到三个合适的住宿选项。\n\n 以下是用户已选择的旅行路线（用于判断住宿的地理位置是否便捷，是否靠近关键景点或交通枢纽）：{selected_route}\n\n 用户的住宿需求如下：\n- 入住日期范围：{date_of_stay}\n- 住宿类型偏好：{accommodation_type}（如：酒店客房、民宿、公寓等）\n-房屋类别:{housing_type}\n- 酒店星级：{stars} 星级 \n- 每晚最高预算（总价）：{room_rate} 元人民币 \n- 总人数：{total_people}\n- 成人数量：{adults}\n- 老年人数量：{elderly}\n- 儿童数量：{children}\n- 儿童年龄：{children_age}\n- 偏好的出行方式：{transportation_preference}（如出租车、地铁、公交等）\n\n🎯 任务说明：\n 请推荐 2–3 个住宿选项，要求符合用户提供的预算和住宿需求，尽量靠近所选路线中的主要景点或交通便利区域。推荐时需特别考虑老年人和儿童的舒适性、安全性与无障碍需求。\n\n 每个住宿选项请提供以下信息：\n- 住宿名称 \n- 所在位置（例如哪个区域或靠近哪些景点）\n- 预估每晚价格（不超出用户预算）\n- 服务和设施简介（如电梯、无障碍通道、是否含早餐、是否有家庭房、是否适合儿童等）\n- 从住宿前往主要景点或交通枢纽的推荐交通方式（基于用户的出行偏好）\n\n📌 回答要求：\n 语气应专业、自然，结构清晰。每个住宿选项单独成段，信息完整，便于用户做出决策。",
+        "summary": "您是太原的专业旅游助理。根据用户选择的路线、用餐偏好和住宿选择生成完整的旅行行程摘要，同时还包含他们的附加备注、准备提醒和紧急信息。\n\n 用户输入:\n＊路线安排:\n {selected_route}\n\n ️用餐偏好（早餐，午餐，晚餐）:\n {selected_food}\n\n＊住宿安排:\n {selected_accommodation}\n\n 附加说明（例如，时间限制，特殊要求）:\n {notes}\n\n＊准备提醒 (例如身份证、车票、衣服):\n {preparation}\n\n 紧急信息（例如，附近的医院，紧急联系人）:\n {emergency}\n\n 任务:\n 生成完整的太原旅游总结，结构如下:\n\n1. ＊每日行程 \n 根据 {selected_route} 逐日分解行程，确保逻辑流程。\n 每天分配景点、膳食（早餐 / 午餐 / 晚餐）和住宿。\n 包括 {notes} 中的任何时间限制（例如， 上午 9 点之前到达开放时间 ）。\n\n2. ＊行前准备 \n 列出要打包的必备物品（例如身份证，门票，适合天气的衣服）。\n 包括 {preparation} 的提醒（例如，携带护照办理酒店入住手续 ）。\n 建议提前预订（门票，交通，餐馆）。\n\n3.  ️重要事项及安全 \n 突出关键考虑因素：高峰时段，机票预订，儿童 / 老人安全。\n 包括 {emergency} 详细信息（例如，最近的医院：太原中心医院，联系 120）。\n 从 {notes} 添加付款方式，交通提示（出租车 / 地铁）和其他备注。\n\n 输出要求:\n 专业，清晰，结构与标记的部分。\n 活动分组的逐日标题（例如第 1 天 ）。\n 将 {notes}，{preparation} 和 {emergency} 自然地整合到相关部分中。\n 礼貌和用户友好的语气直接分享。"
+      }
+    },
+    "qwen_speech_model": {
+      "model_name": "qwen2.5:3b",
+      "base_url": "http://192.168.1.102:11434",
+      "prompts": {
+        "speech_answer": "你是太原市的专业旅游助手，用户向你提出了以下问题：{question}\n\n请根据问题内容，判断其属于以下哪一类信息需求，并严格按照对应要求进行回答。请使用中文输出，保持格式统一、信息清晰、内容简明、专业。\n\n=== 问题类型与回答要求 ===\n\n1. 【最佳路线/游览顺序】  \n- 如果用户询问的是\"最佳路线\"或\"游览顺序\"，请提供合理的游览线路。  \n- 使用\"→\"符号连接景点，展示清晰的游览顺序。  \n- 路线需考虑地理位置和文化逻辑的连贯性。  \n- 不要添加解释性文字，仅输出路线本身。  \n- 示例：晋祠南门牌坊 → 飞龙阁 → 龙亭照壁图壁 → 水镜台 → 航取 → 品道讲堂 → 圣母殿\n\n2. 【交通信息】  \n- 如果用户询问的是交通方式、自驾、公交等问题，请按以下三个部分回答：  \n    【公交线路信息】  \n    - 公交线路编号（如：10路、308路）  \n    - 起点与终点名称  \n    - 主要经过站点  \n    - 首末班车时间（注明夏季和冬季）  \n    - 全程票价（含是否单一票制）  \n    \n    【自驾信息】  \n    - 推荐行车路线（注明主干道）  \n    - 预计行驶时间  \n    - 停车场位置（距离景点多少米）  \n    - 停车容量  \n    - 收费标准（按次/按天）  \n    \n    【其他信息】  \n    - 是否免费开放、特别活动等  \n    - 周边推荐设施（如餐厅、公园）  \n    - 出行建议或提示  \n- 若某部分无资料，请写\"暂无相关信息\"。\n\n3. 【美食特产】  \n- 如果用户想了解某地美食、特产，请使用项目符号列出。  \n- 内容应包括菜名、所属菜系、代表性描述、食材或口味特点。  \n- 排除无关内容，保持简洁、信息完整、格式一致。  \n\n4. 【文化介绍】  \n- 如果问题涉及历史背景、文化价值、习俗等，请简要、客观地介绍。  \n- 语言需专业、内容具代表性和准确性。  \n\n5. 【景点游览信息】  \n- 如果用户提问涉及景点详情（如看点、开放情况、活动等），请提供全面介绍。  \n- 内容需涵盖开放时间、票价、景区特色、参观建议等。  \n- 回答应具有导览实用性、逻辑清晰、重点突出。\n\n=== 说明 ===  \n- 请根据问题内容自行判断类型，选择对应的格式与信息内容作答。  \n- 不要重复问题、不要添加\"以下是您要的信息\"类语言。  \n- 若问题不清晰，请结合上下文尽量识别其意图并作出合理推测回答。\n\n回答：\n"
+      }
+    },
+    "qwen_nonlogin_model": {
+      "model_name": "qwen2.5:3b",
+      "base_url": "http://192.168.1.102:11434",
+      "prompts": {
+        "best_route": "你是太原市的旅游助手，用户想了解{place}的{info}信息。\n\n请按照以下要求生成回答：\n- 如果用户询问的是“最佳路线”或“游览顺序”，请推荐一个合理的游览线路。\n- 使用“→”符号连接各个景点，展示清晰的游览顺序。\n- 路线应尽量连贯，反映出地理位置或文化逻辑上的合理性。\n- 不要添加多余的解释或段落，只输出路线内容本身。\n\n示例输出格式（仅供参考）：\n晋祠南门牌坊 → 飞龙阁 → 龙亭照壁图壁 → 水镜台 → 航取 → 品道讲堂 → 圣母殿...\n\n请根据{place}实际情况生成类似的路线内容。\n\n回答：\n",
+        "traffic_information": "你是太原市的旅游助手，负责根据用户的问题提供专业且详细的指导。\n用户想了解关于{place}的{info}信息。\n\n请严格按照以下格式和内容要求进行回答，并使用中文输出：\n\n1. 回答必须分为以下三个固定部分，且顺序一致：\n- 公交线路信息\n- 自驾信息\n- 其他信息\n\n2. 每个部分需包含以下具体内容（如有）：\n\n【公交线路信息】\n- 公交线路编号（例如：10路、308路等）\n- 起点与终点名称\n- 主要经过站点\n- 首末班车时间（注明夏季和冬季时间）\n- 全程票价（注明票价金额及是否单一票制）\n\n【自驾信息】\n- 推荐行车路线（起点→目的地，注明主干道名称）\n- 预计行驶时间（例如：30–45分钟）\n- 停车场位置（距离景点多少米）\n- 停车容量（可容纳多少车辆）\n- 收费标准（按次或按天，并写金额）\n\n【其他信息】\n- 是否免费开放、特别活动或展览说明\n- 周边推荐景点或设施（如公园、餐厅）\n- 建议事项或出行提示\n\n3. 如果某部分没有相关信息，请明确写出“暂无相关信息”。\n\n4. 内容需简明、客观、格式统一，使用项目符号“–”列出每条内容。\n\n回答：\n",
+        "culinary_specialities": "你是太原市的旅游助手，负责根据用户的问题提供专业且详细的指导。\n用户想了解关于{place}的{info}信息。\n\n请根据以下要求作答：\n- 使用清晰的项目符号格式组织内容\n- 答案应包含菜系的详细信息，且不应包含其他无关信息。具体说明\n- 回答应简洁明了，信息完整，格式统一\n\n回答：\n",
+        "cultural_introduction": "你是太原市的旅游助手，负责根据用户的问题提供指导。\n用户想了解关于{place}的{info}信息。\n你的回答应当简明且具有专业性。\n回答：\n",
+        "sightseeing_tours": "你是太原市的旅游助手，负责根据用户的问题提供指导。\n用户想了解关于{place}的{info}信息。\n你的回答应当简明且具有专业性。\n你的回答应该涵盖所问地点的所有重要细节\n回答：\n"
+      }
+    },
+    "speech_recognition": {
+    "model_path": "D:/toursim/Backend_Algorithm_tourism_App/downloaded_models",
+    "models": {
+      "main_model": {
+        "name": "paraformer-zh",
+        "revision": "v2.0.4"
+      },
+      "vad_model": {
+        "name": "fsmn-vad",
+        "revision": "v2.0.4"
+      },
+      "punc_model": {
+        "name": "ct-punc",
+        "revision": "v2.0.4"
+      }
+    },
+    "generation_params": {
+      "language": "zn",
+      "use_itn": true,
+      "batch_size_s": 60,
+      "merge_vad": true,
+      "merge_length_s": 15
+    }
+  },
+  "text_to_speech": {
+    "models_dir": "D:/toursim/Backend_Algorithm_tourism_App/downloaded_models",
+    "model_config": {
+      "bark_model": "barksmall",
+      "voice_preset": "zh_speaker_7.npz"
+    },
+    "generation_params": {
+      "max_chunk_length": 30,
+      "padding": true,
+      "truncation": true
+    }
+  },
+  
+    "task": "s2v-1.3B",
+    "size": "832*480",
+    "ckpt_dir": "D:/toursim/updated/Backend_Algorithm_tourism_App/Service/Wan2.1-T2V-1.3B",
+    "phantom_ckpt": "D:/toursim/updated/Backend_Algorithm_tourism_App/Service/Phantom-Wan-Models/Phantom-Wan-1.3B.pth",
+    "output_dir": "./generated_videos",
+    "generate_py": "D:/toursim/updated/Backend_Algorithm_tourism_App/Service/generate.py",
+    "python_executable": "D:/toursim/updated/Backend_Algorithm_tourism_App/tourist/Scripts/python.exe"
+  
+  
+  }
+

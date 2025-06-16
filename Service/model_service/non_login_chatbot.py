@@ -5,7 +5,7 @@ import numpy as np
 import soundfile as sf
 
 from Service.model.non_login import NonLogin
-from Service.model.text_to_speech import TextToAudio
+from Service.model.text_to_speech import TTS
 from typing import Optional
 from scipy.io.wavfile import write
 from Service.model.speech_model import SpeechRecognitionModel
@@ -25,7 +25,7 @@ non_login_speech_answer = NonLoginSpeechAnswer()
 
 
 non_login_model = NonLogin()
-text_to_speech = TextToAudio()
+text_to_speech = TTS()
 
 def non_login_chatbot(place: str, info: str):
     if info not in ['文化介绍','特色美食']:
@@ -33,12 +33,12 @@ def non_login_chatbot(place: str, info: str):
         return NonLoginChatBotResponse(response = answer)
     else:
         answer = non_login_model.invoke(place, info)
-        speech_answer = text_to_speech.generate(answer)
-        buffer = io.BytesIO()
-        write(buffer, 24000, speech_answer.astype(np.float32))  # Bark uses 24kHz
-        audio_bytes = buffer.getvalue()
-        audio_base64 = base64.b64encode(audio_bytes).decode('utf-8')
-        return NonLoginChatBotResponse(response = answer, audio = audio_base64)
+        speech_answer = text_to_speech.text_to_speech_and_show_bytes(answer)
+        # buffer = io.BytesIO()
+        # write(buffer, 24000, speech_answer.astype(np.float32))  # Bark uses 24kHz
+        # audio_bytes = buffer.getvalue()
+        # audio_base64 = base64.b64encode(audio_bytes).decode('utf-8')
+        return NonLoginChatBotResponse(response = answer, audio = speech_answer)
 
 def non_audio_chatbot(content: bytes) -> NonLoginAudioChatbotResponse:
     buffer = io.BytesIO(content)
@@ -61,11 +61,12 @@ def non_audio_chatbot(content: bytes) -> NonLoginAudioChatbotResponse:
     question = speech_model.transcribe(audio_bytes)
     answer = non_login_speech_answer.invoke(question)
     if '文化介绍' in answer or '最佳路线' in answer:
-        speech_answer = text_to_speech.generate(answer)
-        buffer = io.BytesIO()
-        write(buffer, 24000, speech_answer.astype(np.float32))  # Bark uses 24kHz
-        audio_bytes = buffer.getvalue()
-        audio_base64 = base64.b64encode(audio_bytes).decode('utf-8')
-        return NonLoginAudioChatbotResponse(question = question, answer = answer, audio = audio_base64)
+        # speech_answer = text_to_speech.generate(answer)
+        # buffer = io.BytesIO()
+        # write(buffer, 24000, speech_answer.astype(np.float32))  # Bark uses 24kHz
+        # audio_bytes = buffer.getvalue()
+        # audio_base64 = base64.b64encode(audio_bytes).decode('utf-8')
+        speech_answer = text_to_speech.text_to_speech_and_show_bytes(answer)
+        return NonLoginAudioChatbotResponse(question = question, answer = answer, audio = speech_answer)
     else:
         return NonLoginAudioChatbotResponse(question = question, answer = answer)

@@ -1,8 +1,8 @@
-langchain_core
-langchain_ollama
-uvicorn
-fastapi
-funasr
-pyaudio
-transformers
-python-multipart
+fastapi==0.115.12
+uvicorn==0.34.2
+langchain-core==0.3.61
+langchain-ollama==0.3.3
+funasr==1.2.6
+pyaudio==0.2.14
+transformers==4.52.3
+python-multipart==0.0.20
